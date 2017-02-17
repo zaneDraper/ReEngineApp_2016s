@@ -30,6 +30,13 @@ void MyPrimitive::AddQuad(vector3 a_vBottomLeft, vector3 a_vBottomRight, vector3
 	AddVertexPosition(a_vBottomRight);
 	AddVertexPosition(a_vTopRight);
 }
+//This will make the triang A->B->C
+void MyPrimitive::AddTri(vector3 a_vBottomLeft, vector3 a_vBottomRight, vector3 a_vTop)
+{
+	AddVertexPosition(a_vBottomLeft);
+	AddVertexPosition(a_vBottomRight);
+	AddVertexPosition(a_vTop);
+}
 void MyPrimitive::GeneratePlane(float a_fSize, vector3 a_v3Color)
 {
 	if (a_fSize < 0.01f)
@@ -50,7 +57,6 @@ void MyPrimitive::GeneratePlane(float a_fSize, vector3 a_v3Color)
 	vector3 pointG(fValue, fValue, -0.001f); //2
 	vector3 pointH(-fValue, fValue, -0.001f); //3
 
-											  //F
 	AddQuad(pointA, pointB, pointD, pointC);
 	//Double sided
 	AddQuad(pointE, pointF, pointG, pointH);
@@ -114,12 +120,22 @@ void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivis
 	//3--2
 	//|  |
 	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
+	vector3 point0(0, a_fHeight / 2, 0); //Head
+	vector3 point1(0, -a_fHeight / 2, 0); //Base
+
+	vector<vector3> points;
+	float curRadian = 0;
+
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		points.push_back(vector3( a_fRadius * cos(curRadian), -a_fHeight / 2, a_fRadius * sin(curRadian)));
+		curRadian += ((2 * PI) / a_nSubdivisions);
+	}
+
+	for (int i = 0; i < a_nSubdivisions - 1; i++) {
+		AddQuad(point1, points[i], points[i + 1], point0);
+	}
+	AddQuad(point1, points[a_nSubdivisions-1], points[0], point0);
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -139,12 +155,36 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
 	//3--2
 	//|  |
 	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
+	vector3 point0(0, a_fHeight / 2, 0); //Head
+	vector3 point1(0, -a_fHeight / 2, 0); //Base
+
+	vector<vector3> points;
+	float curRadian = 0;
+
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		points.push_back(vector3(a_fRadius * cos(curRadian), a_fHeight / 2, a_fRadius * sin(curRadian)));
+		points.push_back(vector3(a_fRadius * cos(curRadian), -a_fHeight / 2, a_fRadius * sin(curRadian)));
+		curRadian += ((2 * PI) / a_nSubdivisions);
+	}
+
+	//quads
+	for (int i = 0; i < (a_nSubdivisions*2) - 2; i+=2) {
+		AddQuad(points[i], points[i+2], points[i + 1], points[i+3]);
+	}
+	AddQuad(points[(2*a_nSubdivisions) - 2], points[0], points[(2 * a_nSubdivisions) - 1], points[1]);
+
+	//tris
+	for (int i = 0; i < (2 * a_nSubdivisions) - 2; i += 2) {
+		AddTri(point0, points[i], points[i + 2]);
+	}
+	AddTri(point0, points[(2 * a_nSubdivisions) - 2], points[0]);
+
+	for (int i = 1; i < (2 * a_nSubdivisions) - 2; i += 2) {
+		AddTri(point1, points[i], points[i + 2]);
+	}
+	AddTri(point1, points[(2 * a_nSubdivisions) - 1], points[1]);
+
 
 	//Your code ends here
 	CompileObject(a_v3Color);
