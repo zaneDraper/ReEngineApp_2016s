@@ -176,9 +176,9 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
 
 	//tris
 	for (int i = 0; i < (2 * a_nSubdivisions) - 2; i += 2) {
-		AddTri(point0, points[i], points[i + 2]);
+		AddTri(point0, points[i+2], points[i]);
 	}
-	AddTri(point0, points[(2 * a_nSubdivisions) - 2], points[0]);
+	AddTri(point0, points[0], points[(2 * a_nSubdivisions) - 2]);
 
 	for (int i = 1; i < (2 * a_nSubdivisions) - 2; i += 2) {
 		AddTri(point1, points[i], points[i + 2]);
@@ -204,12 +204,39 @@ void MyPrimitive::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float
 	//3--2
 	//|  |
 	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
+	vector<vector3> points1;
+	vector<vector3> points2;
+	float curRadian = 0;
+
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		points1.push_back(vector3(a_fOuterRadius * cos(curRadian), a_fHeight / 2, a_fOuterRadius * sin(curRadian)));
+		points1.push_back(vector3(a_fInnerRadius * cos(curRadian), a_fHeight / 2, a_fInnerRadius * sin(curRadian)));
+		curRadian += ((2 * PI) / a_nSubdivisions);
+	}
+
+	for (int i = 0; i < a_nSubdivisions; i++) {
+		points2.push_back(vector3(a_fOuterRadius * cos(curRadian), -a_fHeight / 2, a_fOuterRadius * sin(curRadian)));
+		points2.push_back(vector3(a_fInnerRadius * cos(curRadian), -a_fHeight / 2, a_fInnerRadius * sin(curRadian)));
+		curRadian += ((2 * PI) / a_nSubdivisions);
+	}
+
+	//top bottom
+	for (int i = 0; i < (2 * a_nSubdivisions) -2; i+=2) {
+		AddQuad(points1[i], points1[i + 1], points1[i + 2], points1[i + 3]);
+		AddQuad(points2[i], points2[i + 2], points2[i + 1], points2[i + 3]);
+	}
+	AddQuad(points1[(2 * a_nSubdivisions) - 2], points1[(2 * a_nSubdivisions) - 1], points1[0], points1[1]);
+	AddQuad(points2[(2 * a_nSubdivisions) - 2], points2[0], points2[(2 * a_nSubdivisions) - 1], points2[1]);
+
+	//inside outside
+	for (int i = 0; i < (2 * a_nSubdivisions) - 2; i += 2) {
+		AddQuad(points1[i], points1[i + 2], points2[i], points2[i + 2]);
+		AddQuad(points1[i + 1], points2[i + 1], points1[i + 3], points2[i + 3]);
+	}
+	AddQuad(points1[(2 * a_nSubdivisions) - 2], points1[0], points2[(2 * a_nSubdivisions) - 2], points2[0]);
+	AddQuad(points1[(2 * a_nSubdivisions) - 1], points2[(2 * a_nSubdivisions) - 1], points1[1], points2[1]);
+
 
 	//Your code ends here
 	CompileObject(a_v3Color);
