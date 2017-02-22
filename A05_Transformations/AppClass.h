@@ -17,7 +17,7 @@ class AppClass : public ReEngAppClass
 	PrimitiveClass* m_pMoon = nullptr;// Moon's mesh
 
 	matrix4 m_m4Sun;// Matrix for the Sun
-	matrix4 m_m4Earth;// Matrix for the Earth
+	matrix4 m_m4Earth = glm::translate(11.0f, 0.0f, 0.0f);// Matrix for the Earth
 	matrix4 m_m4Moon;// Matrix for the Moon
 
 	float m_fEarthTimer = 0; //Will count the cycles we are RE_RUNNING

@@ -98,8 +98,7 @@ void MyPrimitive::GenerateCube(float a_fSize, vector3 a_v3Color)
 
 	CompileObject(a_v3Color);
 }
-void MyPrimitive::GenerateCone
-(float a_fRadius, float a_fHeight, int a_nSubdivisions, vector3 a_v3Color)
+void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions, vector3 a_v3Color)
 {
 	if (a_nSubdivisions < 3)
 		a_nSubdivisions = 3;

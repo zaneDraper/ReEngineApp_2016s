@@ -49,11 +49,53 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region YOUR CODE GOES HERE
+
+	//
+	// MY CRUDE FIX FOR CONTROLLING THE SUNS MOVEMENT
+	//
+	static int x = 0;
+	static int y = 0;
+	static int z = 0;
+	bool pressed = false;
+	int negate;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+		negate = -1;
+	}
+	else negate = 1;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+		x += negate;
+		pressed = true;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+		y += negate;
+		pressed = true;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+		z += negate;
+		pressed = true;
+	}
+
+	if (pressed) {
+		m_m4Sun = glm::translate(x, y, z);
+	}
+
+	//ACTUAL HOMEWORK
+
+	//first calculate the earths offset and current position relative to the sun
+	matrix4 EarthOffset = m_m4Sun * glm::rotate(m_fEarthTimer, vector3(0.0f, 1.0f, 0.0f)) * distanceEarth;
+	//use the earths offset, then find the moons after rotation.
+	matrix4 MoonOffset = EarthOffset * glm::rotate(m_fMoonTimer, vector3(0.0f, -1.0f, 0.0f)) * distanceMoon;
+
 	//Calculate the position of the Earth
-	m_m4Earth = glm::rotate(IDENTITY_M4, m_fEarthTimer, vector3(0.0f, 1.0f, 0.0f));
+	//use the earths offset, then rotate the actual earth
+	m_m4Earth = EarthOffset * glm::rotate(m_fEarthTimer * 360, vector3(0.0f, 0.0f, 1.0f));
 
 	//Calculate the position of the Moon
-	m_m4Moon = glm::rotate(IDENTITY_M4, m_fMoonTimer, vector3(0.0f, 1.0f, 0.0f));
+	//use the moons offset, then rotate the actual moon
+	m_m4Moon = MoonOffset * glm::rotate(m_fMoonTimer * 90, vector3(0.0f, 1.0f, 0.0f));
+
 #pragma endregion
 
 #pragma region Print info
