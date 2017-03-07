@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FCF38D13-439E-4DEC-BB89-2BB6455922AD}</ProjectGuid>
-    <RootNamespace>E08_Gimbal_Lock</RootNamespace>
-    <ProjectName>E08_Gimbal_Lock</ProjectName>
+    <ProjectGuid>{F2B4B292-2881-40EA-A091-57D14FB1AE05}</ProjectGuid>
+    <RootNamespace>E07_LERP</RootNamespace>
+    <ProjectName>E07_LERP</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -105,16 +105,16 @@ xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppClass.cpp" />
-    <ClCompile Include="AppClassControls.cpp" />
-    <ClCompile Include="Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\res\Resource.h" />
     <ClInclude Include="AppClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppClass.cpp" />
+    <ClCompile Include="AppClassControls.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
