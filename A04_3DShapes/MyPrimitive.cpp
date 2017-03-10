@@ -115,11 +115,6 @@ void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivis
 	Release();
 	Init();
 
-	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
 
 	vector3 point0(0, a_fHeight / 2, 0); //Head
 	vector3 point1(0, -a_fHeight / 2, 0); //Base
@@ -149,12 +144,6 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
 
 	Release();
 	Init();
-
-	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
 
 	vector3 point0(0, a_fHeight / 2, 0); //Head
 	vector3 point1(0, -a_fHeight / 2, 0); //Base
@@ -198,12 +187,6 @@ void MyPrimitive::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float
 
 	Release();
 	Init();
-
-	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
 
 	vector<vector3> points1;
 	vector<vector3> points2;
@@ -288,17 +271,44 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 	Release();
 	Init();
 
-	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+	a_nSubdivisions *= 2;
 
-	AddQuad(point0, point1, point3, point2);
+	vector<vector3> points;
+
+	vector3 point0(0, a_fRadius, 0); //Head
+	vector3 point1(0, -a_fRadius, 0); //Base
+	
+	for (int i = 1; i < a_nSubdivisions; i++) {
+		float angle1 = (PI/2) - i * (PI / a_nSubdivisions);
+		float radius = a_fRadius * cos(angle1);
+		float height = a_fRadius * sin(angle1);
+
+		for (int j = 0; j < a_nSubdivisions; j++) {
+			float angle2 = j * ((2*PI) / a_nSubdivisions);
+			points.push_back(vector3(radius * cos(angle2), height, radius * sin(angle2)));
+		}
+	}
+
+	//tris
+	for (int i = 0; i < a_nSubdivisions - 1; i++) {
+		AddTri(point0, points[i + 1], points[i]);
+	}
+	AddTri(point0, points[0], points[a_nSubdivisions - 1]);
+	for (int i = points.size() - a_nSubdivisions; i < points.size() - 1; i++) {
+		AddTri(point1, points[i], points[i + 1]);
+	}
+	AddTri(point1, points[points.size() - 1], points[points.size() - a_nSubdivisions]);
+	
+	//quads
+	for (int i = 0; i < points.size() - a_nSubdivisions; i+=a_nSubdivisions) {
+		for (int j = 0; j < a_nSubdivisions - 1; j++) {
+			AddQuad(points[i + j], points[i + j + 1], points[i + j + a_nSubdivisions], points[i + j + a_nSubdivisions + 1]);
+		}
+	}
+	for (int i = 0; i < points.size() - a_nSubdivisions - 1; i += a_nSubdivisions) {
+		AddQuad(points[i], points[i + a_nSubdivisions], points[i + a_nSubdivisions - 1], points[i + (2*a_nSubdivisions) - 1]);
+	}
+	
 
 	//Your code ends here
 	CompileObject(a_v3Color);
