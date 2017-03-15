@@ -12,8 +12,40 @@ void AppClass::InitVariables(void)
 	m_v4ClearColor = vector4(REBLACK, 1); // Set the clear color to black
 
 	m_pMeshMngr->LoadModel("Sorted\\WallEye.bto", "WallEye");
-
 	fDuration = 1.0f;
+
+	//************************************
+	//************************************
+	//MY STUFF
+	//setting my variables
+	curTargetIndex = 0;
+	startTime = 0;
+	endTime = fDuration;
+
+	//populating the list of values
+	points[0] = vector3(-4.0f, -2.0f, 5.0f);
+	points[1] = vector3(1.0f, -2.0f, 5.0f);
+	points[2] = vector3(-3.0f, -1.0f, 3.0f);
+	points[3] = vector3(2.0f, -1.0f, 3.0f);
+	points[4] = vector3(-2.0f, 0.0f, 0.0f);
+	points[5] = vector3(3.0f, 0.0f, 0.0f);
+	points[6] = vector3(-1.0f, 1.0f, -3.0f);
+	points[7] = vector3(4.0f, 1.0f, -3.0f);
+	points[8] = vector3(0.0f, 2.0f, -5.0f);
+	points[9] = vector3(5.0f, 2.0f, -5.0f);
+	points[10] = vector3(1.0f, 3.0f, -5.0f);
+
+	//populate the sphere meshes and their locations
+	m_pSpheres = new PrimitiveClass[11];
+	m_pMatrix = new matrix4[11];
+
+	//set location values and set meshes up
+	for (int i = 0; i < 11; i++) {
+		m_pSpheres[i].GenerateSphere(.2, 5, RERED);
+		m_pMatrix[i] = glm::translate(points[i]);
+	}
+	//***********************************
+	//***********************************
 }
 
 void AppClass::Update(void)
@@ -31,12 +63,34 @@ void AppClass::Update(void)
 	double fTimeSpan = m_pSystem->LapClock(); //Delta time (between frame calls)
 
 	//cumulative time
-	static double fRunTime = 0.0f; //How much time has passed since the program started
+	static float fRunTime = 0.0f; //How much time has passed since the program started
 	fRunTime += fTimeSpan; 
 #pragma endregion
 
 #pragma region Your Code goes here
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "WallEye");
+
+	//after setting startTime to current runtime, and then adding on fDuration for the endTime, Map the crrent fRunTime between them
+	float percent = MapValue(fRunTime, startTime, endTime, 0.0f, 1.0f);
+
+	//Loop the curTargetIndex back to start when it reaches the last circle
+	if (percent >= 1.0f) {
+		if (curTargetIndex != 10)
+			curTargetIndex++;
+		else curTargetIndex = 0;
+
+		startTime = fRunTime;
+		endTime = fRunTime + fDuration;
+		percent = 0;
+	}
+
+	//set the creepers current spot based on the MapValue
+	matrix4 m4Creeper;
+	if (curTargetIndex != 10)
+		m4Creeper = glm::translate(glm::lerp(points[curTargetIndex], points[curTargetIndex + 1], percent));
+	else m4Creeper = glm::translate(glm::lerp(points[curTargetIndex], points[0], percent));
+
+	m_pMeshMngr->SetModelMatrix(m4Creeper, "WallEye");
+
 #pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
@@ -58,6 +112,11 @@ void AppClass::Display(void)
 {
 	//clear the screen
 	ClearScreen();
+
+	for (int i = 0; i < 11; i++) {
+		m_pSpheres[i].Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix(), m_pMatrix[i]);
+	}
+
 	//Render the grid based on the camera's mode:
 	m_pMeshMngr->AddGridToRenderListBasedOnCamera(m_pCameraMngr->GetCameraMode());
 	m_pMeshMngr->Render(); //renders the render list
