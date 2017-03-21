@@ -1,7 +1,7 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("Bobadilla, Alberto - Gimbal Lock");
+	super::InitWindow("Draper, Zane - Gimbal Lock");
 	m_v4ClearColor = vector4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 void AppClass::InitVariables(void)
@@ -15,6 +15,7 @@ void AppClass::InitVariables(void)
 
 void AppClass::Update(void)
 {
+
 	//Update the system's time
 	m_pSystem->UpdateTime();
 
@@ -25,20 +26,16 @@ void AppClass::Update(void)
 	if (m_bFPC == true)
 		CameraRotation();
 
-	//Rotation matrices
-	matrix4 rotX = glm::rotate(IDENTITY_M4, m_v3Orientation.x, REAXISX);
-	matrix4 rotY = glm::rotate(IDENTITY_M4, m_v3Orientation.y, REAXISY);
-	matrix4 rotZ = glm::rotate(IDENTITY_M4, m_v3Orientation.z, REAXISZ);
-
-	//linear combination
-	m_mToWorld = rotX * rotY * rotZ;
+	glm::quat m_qRotation;
+	m_qRotation = glm::quat(vector3(m_v3Orientation.x / 10, m_v3Orientation.y / 10, m_v3Orientation.z/10));
+	m_mToWorld = glm::mat4_cast(m_qRotation);
 
 	//Setting the model matrix
 	m_pMeshMngr->SetModelMatrix(m_mToWorld, "Steve");
 
 	//Adding the instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("Steve");
-
+	
 	int nFPS = m_pSystem->GetFPS();
 	m_pMeshMngr->PrintLine("");
 	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
