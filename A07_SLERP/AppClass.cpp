@@ -47,9 +47,22 @@ void AppClass::Update(void)
 	float fEarthHalfRevTime = 0.5f * m_fDay; // Move for Half a day
 	float fMoonHalfOrbTime = 14.0f * m_fDay; //Moon's orbit is 28 earth days, so half the time for half a route
 
+	glm::quat scale = glm::quat(vector3(1.f, 1.f, 1.f));
+	glm::quat rotation = glm::quat(vector3(0.0f, 0.0f, 110.0f));
+	glm::quat transform = glm::quat(vector3(0.0f, 10.0f, 0.0f));
+	glm::quat myQuaternion = transform * rotation * scale;
+
+
+	matrix4 distance = glm::translate(0.0f, 10.0f, 0.0f);
+	matrix4 transform2 = glm::mat4_cast(transform);
+
+	glm::quat m_qRotation;
+	m_qRotation = glm::quat(vector3(18, 18, 18));
+	matrix4 m_mToWorld = glm::mat4_cast(m_qRotation);
+	
 	//Setting the matrices
 	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Sun");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Earth");
+	m_pMeshMngr->SetModelMatrix(m_mToWorld, "Earth");
 	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Moon");
 
 	//Adds all loaded instance to the render list
