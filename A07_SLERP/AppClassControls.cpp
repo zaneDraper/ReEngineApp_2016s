@@ -41,6 +41,24 @@ void AppClass::ProcessKeyboard(void)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 		m_pCameraMngr->MoveVertical(fSpeed);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+		if (bModifier)
+			x -= .1f;
+		else x += .1f;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+		if (bModifier)
+			y -= .1f;
+		else y += .1f;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+		if (bModifier)
+			z -= .1f;
+		else z += .1f;
+	}
 #pragma endregion
 
 #pragma region Other Actions

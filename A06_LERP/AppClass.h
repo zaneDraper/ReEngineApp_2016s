@@ -25,6 +25,7 @@ class AppClass : public ReEngAppClass
 	matrix4* m_pMatrix = nullptr;
 
 public:
+	float x = 0, y = 0, z = 0;
 	typedef ReEngAppClass super;
 	/*
 	USAGE: Constructor
