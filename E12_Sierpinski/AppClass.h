@@ -9,6 +9,7 @@ Date: 2015/08
 #include "RE\ReEngAppClass.h"
 #include <SFML\Graphics.hpp>
 #include "MyMesh.h"
+#include <vector>
 
 ////Initializing the array
 //m_nObjects = 100;
@@ -93,6 +94,9 @@ public:
 	OUTPUT: ---
 	*/
 	virtual void WriteConfig(void) final {}
+
+	void RecursiveTriangles(int numRecursions, std::vector<int> rowValues);
+
 };
 
 #endif //__APPLICATION_H_
