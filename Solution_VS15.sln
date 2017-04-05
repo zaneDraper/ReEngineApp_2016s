@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_Basics", "01_Basics\01_Basics.vcxproj", "{425ED9DA-852E-4F61-BE06-487F68A6187E}"
 EndProject
@@ -82,6 +82,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "W9R_BoundingSphereDEMO", "W9R_BoundingSphereDEMO\W9R_BoundingSphereDEMO.vcxproj", "{625922B3-FF5F-49AF-84A3-8E4BAD5B8DC4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A08_Camera", "A08_Camera\A08_Camera.vcxproj", "{4A83E863-82FF-4021-B60F-1F5BA70414A3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A08_CameraClass", "A08_CameraClass\A08_CameraClass.vcxproj", "{1C17EF81-32F9-4B7B-8DE1-BAC99CB3135C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -217,6 +219,10 @@ Global
 		{4A83E863-82FF-4021-B60F-1F5BA70414A3}.Debug|x86.Build.0 = Debug|Win32
 		{4A83E863-82FF-4021-B60F-1F5BA70414A3}.Release|x86.ActiveCfg = Release|Win32
 		{4A83E863-82FF-4021-B60F-1F5BA70414A3}.Release|x86.Build.0 = Release|Win32
+		{1C17EF81-32F9-4B7B-8DE1-BAC99CB3135C}.Debug|x86.ActiveCfg = Debug|Win32
+		{1C17EF81-32F9-4B7B-8DE1-BAC99CB3135C}.Debug|x86.Build.0 = Debug|Win32
+		{1C17EF81-32F9-4B7B-8DE1-BAC99CB3135C}.Release|x86.ActiveCfg = Release|Win32
+		{1C17EF81-32F9-4B7B-8DE1-BAC99CB3135C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -254,5 +260,6 @@ Global
 		{B1F0F215-F6DE-426D-8AB8-B85644569D5A} = {8A9C6231-C3D4-493B-A18E-E134FC3A1A35}
 		{625922B3-FF5F-49AF-84A3-8E4BAD5B8DC4} = {2D1B6711-5C2F-40D1-81B0-C84AEDAA4353}
 		{4A83E863-82FF-4021-B60F-1F5BA70414A3} = {124C8EDD-52BA-4EAA-A1F4-6D4302AB5DEC}
+		{1C17EF81-32F9-4B7B-8DE1-BAC99CB3135C} = {124C8EDD-52BA-4EAA-A1F4-6D4302AB5DEC}
 	EndGlobalSection
 EndGlobal
