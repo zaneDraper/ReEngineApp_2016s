@@ -2,7 +2,9 @@
 void AppClass::ProcessKeyboard(void)
 {
 	bool bModifier = false;
+	//movement speed
 	float fSpeed = 0.01f;
+	//rotation speed
 	float rSpeed = .5f;
 
 #pragma region ON_KEY_PRESS_RELEASE

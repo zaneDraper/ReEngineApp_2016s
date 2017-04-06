@@ -1,7 +1,7 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("Sandbox"); // Window Name
+	super::InitWindow("Zane - A08"); // Window Name
 
 	m_v4ClearColor = vector4(0.4f, 0.6f, 0.9f, 0.0f);
 	m_pSystem->SetWindowResolution(RESOLUTIONS::C_1280x720_16x9_HD);
@@ -9,8 +9,11 @@ void AppClass::InitWindow(String a_sWindowName)
 
 void AppClass::InitVariables(void)
 {
-	camera.SetPosition(vector3(0.f, 5.f, 10.f));
-	camera.SetTarget(vector3(0.f, 0.f, 0.f));
+	//Set the position of the camera
+	camera.SetPosition(vector3(0.f, 0.f, 0.f));
+
+	//set the target **bug**
+	//camera.SetTarget(vector3(0.f, 0.f, 0.f));
 
 	//Generate the Cone
 	m_pCone = new PrimitiveClass();
@@ -19,6 +22,14 @@ void AppClass::InitVariables(void)
 	//Generate the Cylinder
 	m_pCylinder = new PrimitiveClass();
 	m_pCylinder->GenerateCylinder(1.0f, 1.0f, 10, REGREEN);
+
+	//Generate the Cube
+	m_pCube = new PrimitiveClass();
+	m_pCube->GenerateCube(1.0f, REYELLOW);
+
+	//Generate the Sphere
+	m_pSphere = new PrimitiveClass();
+	m_pSphere->GenerateSphere(1.0f, 4, REBLUE);
 }
 
 void AppClass::Update(void)
@@ -63,10 +74,16 @@ void AppClass::Display(void)
 	ClearScreen();
 
 	//Render the cone
-	m_pCone->Render(camera.GetProjection(false), camera.GetView(), IDENTITY_M4);
+	m_pCone->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISX * 10.0f));
 
 	//Render the cylinder
-	m_pCylinder->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISZ * -3.0f));
+	m_pCylinder->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISZ * -10.0f));
+
+	//Render the cylinder
+	m_pCube->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISZ * 10.0f));
+
+	//Render the cylinder
+	m_pSphere->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISX * -10.0f));
 
 	m_pMeshMngr->Render(); //renders the render list
 	m_pMeshMngr->ClearRenderList(); //Reset the Render list after render
@@ -75,5 +92,11 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
+	//delete objects from environment
+	delete m_pCone;
+	delete m_pCylinder;
+	delete m_pSphere;
+	delete m_pCube;
+
 	super::Release(); //release the memory of the inherited fields
 }

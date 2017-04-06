@@ -13,7 +13,11 @@ using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
 class AppClass : public ReEngAppClass
 {
+	//primitives for the environment
 	PrimitiveClass *m_pCone, *m_pCylinder;
+	PrimitiveClass *m_pSphere, *m_pCube;
+
+	//camera class
 	MyCamera camera;
 
 public:
