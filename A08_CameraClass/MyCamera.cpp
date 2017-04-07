@@ -11,11 +11,14 @@
 MyCamera::MyCamera()
 {
 	rotation = glm::quat(vector3(0, 0, 0));
+
 	position = vector3(0, 0, 0);
+	target = position + vector3(0, 0, 1);
+	top = position + vector3(0, 1, 0);
 
-	UpdateDirectionVectors();
-
-	center = position + rotation * vector3(0, 0, -1);
+	up = vector3(0, 1, 0);
+	forward = vector3(1, 0, 0);
+	right = vector3(0, 0, 1);
 }
 
 //destructor - no pointers or variables to delete
@@ -26,18 +29,17 @@ MyCamera::~MyCamera()
 //returns the view of the camera
 matrix4 MyCamera::GetView()
 {
-	//recalculated every frame using the cameras rotation orientation
-	center = position + rotation * vector3(0, 0, -1);
+	target = position + forward;
+	top = position + up;
 
-	return glm::lookAt(position, center, up);
+	return glm::lookAt(position, target, up);
 }
 
 //returns the projection of the camera, with a choice of style
 matrix4 MyCamera::GetProjection(bool bOrthographic)
 {
-	//switches between orthographic and perspective
 	if (bOrthographic) {
-		return glm::ortho(position.x * (1080.0f / 768.0f), 1.5f * (1080.0f / 768.0f), -1.5f, 1.5f, 0.01f, 1000.0f);
+		return glm::ortho(6.f * (1080.0f / 768.0f), 1.5f * (1080.0f / 768.0f), -1.5f, 1.5f, 0.01f, 1000.0f);
 	}
 	else return glm::perspective(45.0f, 1080.0f / 768.0f, 0.01f, 1000.0f);
 }
@@ -52,25 +54,19 @@ void MyCamera::SetPosition(vector3 v3Position)
 //**currently contains a bug**
 void MyCamera::SetTarget(vector3 v3Target)
 {
-	//gets a direction vector from the current position to the targets location
-	vector3 dirVector = v3Target - position;
-	//gets the magnitude to find help with getting the unit vector value
-	float magnitude = glm::length(dirVector);
+	target = v3Target;
 
-	//gets the unit vector values
-	dirVector.x /= magnitude;
-	dirVector.y /= magnitude;
-	dirVector.z /= magnitude;
+	forward = glm::normalize(target - position);
+	up = glm::normalize(glm::cross(forward, vector3(forward.z, forward.y, forward.x)));
+	right = glm::normalize(glm::cross(forward, up));
 
-	//acos should return the correct orientations around each axis
-	//had some trouble figuring out why the orientation weren't coming out correct
-	vector3 newRot(acos(dirVector.x), acos(dirVector.y), acos(dirVector.z));
+	matrix4 lookMat = glm::lookAt(position, v3Target, position + up);
+	rotation = glm::conjugate(glm::toQuat(lookMat));
+	rotation = glm::rotate(rotation, 180.f, vector3(0, 1, 0));
 
-	//applies the new rotation
-	rotation = glm::quat(newRot);
-
-	//resets all the direction vectors to represent the new rotation
-	UpdateDirectionVectors();
+	//rotation.x = abs(rotation.x);
+	//rotation.y = abs(rotation.y);
+	//rotation.z = abs(rotation.z);
 }
 
 //sets the input value of up
@@ -82,19 +78,25 @@ void MyCamera::SetUp(vector3 v3Up)
 //moves the position forward along the current forward vector
 void MyCamera::MoveForward(float fIncrement)
 {
-	position += (forward * -fIncrement);
+	position += (forward * fIncrement);
+	target += (forward * fIncrement);
+	top += (forward * fIncrement);
 }
 
 //moves the position sideways along the current right vector
 void MyCamera::MoveSideways(float fIncrement)
 {
-	position += (right * fIncrement);
+	position += (right * -fIncrement);
+	target += (right * -fIncrement);
+	top += (right * -fIncrement);
 }
 
 //moves the position vertical along the current up value
 void MyCamera::MoveVertical(float fIncrement)
 {
 	position += (up * fIncrement);
+	target += (up * fIncrement);
+	top += (up * fIncrement);
 }
 
 //rotates the quat rotation around the current x axis

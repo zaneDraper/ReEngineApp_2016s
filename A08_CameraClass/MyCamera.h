@@ -9,10 +9,12 @@ class MyCamera
 {
 	glm::quat rotation;
 	vector3 position;
+	vector3 target;
+	vector3 top;
+
 	vector3 forward;
 	vector3 right;
 	vector3 up;;
-	vector3 center;
 
 public:
 	MyCamera();
@@ -25,8 +27,6 @@ public:
 	void SetPosition(vector3 v3Position);
 
 	void SetTarget(vector3 v3Target);
-
-	void IncTarget(vector3 v3Target);
 
 	void SetUp(vector3 v3Up);
 

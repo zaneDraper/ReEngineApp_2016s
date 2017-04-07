@@ -13,7 +13,7 @@ void AppClass::InitVariables(void)
 	camera.SetPosition(vector3(0.f, 0.f, 0.f));
 
 	//set the target **bug**
-	//camera.SetTarget(vector3(0.f, 0.f, 0.f));
+	camera.SetTarget(vector3(1.f, 12.f, 0.f));
 
 	//Generate the Cone
 	m_pCone = new PrimitiveClass();
@@ -30,6 +30,14 @@ void AppClass::InitVariables(void)
 	//Generate the Sphere
 	m_pSphere = new PrimitiveClass();
 	m_pSphere->GenerateSphere(1.0f, 4, REBLUE);
+
+	//Generate the Toros
+	m_pToros = new PrimitiveClass();
+	m_pToros->GenerateTorus(2.f, 1.0f, 4, 4, REBLACK);
+
+	//Generate the Sphere
+	m_pCube2 = new PrimitiveClass();
+	m_pCube2->GenerateCube(1.0f, REBLUE);
 }
 
 void AppClass::Update(void)
@@ -39,6 +47,44 @@ void AppClass::Update(void)
 
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
+
+
+	if (m_bFPC == true) {
+
+		UINT MouseX, MouseY;
+		UINT CenterX, CenterY;
+
+		CenterX = m_pSystem->GetWindowX() + m_pSystem->GetWindowWidth() / 2;
+		CenterY = m_pSystem->GetWindowY() + m_pSystem->GetWindowHeight() / 2;
+
+		POINT pt;
+		GetCursorPos(&pt);
+		MouseX = pt.x;
+		MouseY = pt.y;
+
+		float DeltaMouse = 0.f;
+		if (MouseX < CenterX) {
+			DeltaMouse = static_cast<float>(CenterX - MouseX);
+			DeltaMouse = abs(DeltaMouse) / 50;
+			camera.ChangeYaw(DeltaMouse);
+			std::cout << DeltaMouse << std::endl;
+		}
+		else if (MouseX > CenterX) {
+			DeltaMouse = static_cast<float>(MouseX - CenterX);
+			DeltaMouse = abs(DeltaMouse) / 50;
+			camera.ChangeYaw(-DeltaMouse);
+		}
+		if (MouseY < CenterY) {
+			DeltaMouse = static_cast<float>(CenterY - MouseY);
+			DeltaMouse = abs(DeltaMouse) / 50;
+			camera.ChangePitch(-DeltaMouse);
+		}
+		else if (MouseY > CenterY) {
+			DeltaMouse = static_cast<float>(MouseY - CenterY);
+			DeltaMouse = abs(DeltaMouse) / 50;
+			camera.ChangePitch(DeltaMouse);
+		}
+	}
 
 	//First person camera movement
 	if (m_bFPC == true)
@@ -79,11 +125,17 @@ void AppClass::Display(void)
 	//Render the cylinder
 	m_pCylinder->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISZ * -10.0f));
 
-	//Render the cylinder
+	//Render the cube
 	m_pCube->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISZ * 10.0f));
 
 	//Render the cylinder
 	m_pSphere->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISX * -10.0f));
+
+	//Render the torus
+	m_pToros->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISY * 10.0f));
+
+	//Render the cube
+	m_pCube2->Render(camera.GetProjection(false), camera.GetView(), glm::translate(IDENTITY_M4, REAXISY * -10.0f));
 
 	m_pMeshMngr->Render(); //renders the render list
 	m_pMeshMngr->ClearRenderList(); //Reset the Render list after render
