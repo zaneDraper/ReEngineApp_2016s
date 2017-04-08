@@ -21,6 +21,10 @@ class AppClass : public ReEngAppClass
 	//camera class
 	MyCamera camera;
 
+	//variables for mouse input
+	UINT MouseX, MouseY;
+	UINT CenterX, CenterY;
+
 public:
 	typedef ReEngAppClass super;
 

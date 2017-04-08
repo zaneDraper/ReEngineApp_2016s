@@ -9,10 +9,14 @@ void AppClass::InitWindow(String a_sWindowName)
 
 void AppClass::InitVariables(void)
 {
+	//finds the center of the screen
+	CenterX = m_pSystem->GetWindowX() + m_pSystem->GetWindowWidth() / 2;
+	CenterY = m_pSystem->GetWindowY() + m_pSystem->GetWindowHeight() / 2;
+
 	//Set the position of the camera
 	camera.SetPosition(vector3(0.f, 0.f, 0.f));
 
-	//set the target **bug**
+	//set the target
 	camera.SetTarget(vector3(1.f, 12.f, 0.f));
 
 	//Generate the Cone
@@ -48,20 +52,16 @@ void AppClass::Update(void)
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
 
-
+	//Checks for mouse input (based off in class demo)
 	if (m_bFPC == true) {
 
-		UINT MouseX, MouseY;
-		UINT CenterX, CenterY;
-
-		CenterX = m_pSystem->GetWindowX() + m_pSystem->GetWindowWidth() / 2;
-		CenterY = m_pSystem->GetWindowY() + m_pSystem->GetWindowHeight() / 2;
-
+		//gets the mouse cursor position
 		POINT pt;
 		GetCursorPos(&pt);
 		MouseX = pt.x;
 		MouseY = pt.y;
 
+		//adjusts the yaw/pitch based on the position of the mouse
 		float DeltaMouse = 0.f;
 		if (MouseX < CenterX) {
 			DeltaMouse = static_cast<float>(CenterX - MouseX);

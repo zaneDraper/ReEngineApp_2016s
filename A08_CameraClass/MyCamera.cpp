@@ -10,6 +10,7 @@
 //constructor - sets up position and rotation and then the direction vectors
 MyCamera::MyCamera()
 {
+	//initial variables
 	rotation = glm::quat(vector3(0, 0, 0));
 
 	position = vector3(0, 0, 0);
@@ -29,9 +30,11 @@ MyCamera::~MyCamera()
 //returns the view of the camera
 matrix4 MyCamera::GetView()
 {
+	//updates the target and top positions every frame
 	target = position + forward;
 	top = position + up;
 
+	//returns the view
 	return glm::lookAt(position, target, up);
 }
 
@@ -51,15 +54,17 @@ void MyCamera::SetPosition(vector3 v3Position)
 }
 
 //sets the target of the camera by setting the rotation to face the target
-//**currently contains a bug**
 void MyCamera::SetTarget(vector3 v3Target)
 {
+	//update the target
 	target = v3Target;
 
+	//recalculate the directional vectors
 	forward = glm::normalize(target - position);
 	up = glm::normalize(glm::cross(forward, vector3(forward.z, forward.y, forward.x)));
 	right = glm::normalize(glm::cross(forward, up));
 
+	//determines the rotation based off of the new target
 	matrix4 lookMat = glm::lookAt(position, v3Target, position + up);
 	rotation = glm::conjugate(glm::toQuat(lookMat));
 	rotation = glm::rotate(rotation, 180.f, vector3(0, 1, 0));
