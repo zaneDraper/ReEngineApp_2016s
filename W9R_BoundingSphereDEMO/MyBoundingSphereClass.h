@@ -9,6 +9,8 @@ public:
 	vector3 m_v3CenterGlobal = vector3(0.0f); //center of the sphere in global space
 	matrix4 m_m4ToWorld = IDENTITY_M4; //matrix that takes you from local to global space
 	MeshManagerSingleton* m_pMeshMngr = nullptr; //for drawing the sphere
+
+	bool m_bColliding = false;
 	/*
 	Constructor, needs a vertex list
 	*/
@@ -21,4 +23,9 @@ public:
 	Sets the transform from the local to world matrix
 	*/
 	void SetModelMatrix(matrix4 a_m4ToWorld);
+
+	/*
+	Will check the collision with another object
+	*/
+	bool IsColliding(MyBoundingSphereClass* a_other);
 };
