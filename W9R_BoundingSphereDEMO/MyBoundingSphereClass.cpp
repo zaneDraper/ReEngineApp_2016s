@@ -74,3 +74,13 @@ bool MyBoundingSphereClass::IsColliding(MyBoundingSphereClass* a_other)
 	float fRadiiSum = this->m_fRadius + a_other->m_fRadius;
 	return fDistance < fRadiiSum;
 }
+
+void MyBoundingSphereClass::SetColliding(bool input) { m_bColliding = input; }
+void MyBoundingSphereClass::SetCenterLocal(vector3 input) { m_v3CenterLocal = input; }
+void MyBoundingSphereClass::SetCenterGlobal(vector3 input) { m_v3CenterGlobal = input; }
+void MyBoundingSphereClass::SetRadius(float input) { m_fRadius = input; }
+bool MyBoundingSphereClass::GetColliding(void) { return m_bColliding; }
+vector3 MyBoundingSphereClass::GetCenterLocal(void) { return m_v3CenterLocal; }
+vector3 MyBoundingSphereClass::GetCenterGlobal(void) { return m_v3CenterGlobal; }
+float MyBoundingSphereClass::GetRadius(void) { return m_fRadius; }
+matrix4 MyBoundingSphereClass::GetModelMatrix(void) { return m_m4ToWorld; }
